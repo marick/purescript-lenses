@@ -1,0 +1,21 @@
+{
+  "name": "purescript-lenses",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "output"
+  ],
+  "dependencies": {
+    "purescript-prelude": "^3.1.1",
+    "purescript-console": "^3.0.0",
+    "bower": "*",
+    "install": "^1.0.4",
+    "purescript-profunctor-lenses": "^3.8.0",
+    "purescript-record-show": "^0.4.0",
+    "purescript-yarn": "^3.0.1"
+  },
+  "devDependencies": {
+    "purescript-psci-support": "^3.0.0"
+  }
+}
