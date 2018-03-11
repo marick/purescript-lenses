@@ -1,3 +1,5 @@
-# purescript-lenses
+Supporting code for
+[*Lenses for Mere Mortals: PureScript Edition*](https://leanpub.com/lenses).
 
-Supporting code for *Lenses for Mere Mortals: PureScript Edition*
+
+![](misc/cover.jpg)
