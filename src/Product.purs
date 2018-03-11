@@ -12,9 +12,10 @@ import Data.Lens as Lens
 
 -}
 
-
+import Prelude
 import Data.Tuple (Tuple(..), fst)
 import Data.Lens (lens)
+import Data.Lens as Lens
 import Data.Lens.Types (Lens, Lens')
 
 aTuple :: Tuple String Int
@@ -61,4 +62,3 @@ count = lens _.count (_ { count = _ })
 
 both :: Tuple String Event
 both = Tuple "example" duringNetflix
-
