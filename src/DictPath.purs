@@ -1,20 +1,7 @@
 module DictPath where
 
-{- Paste the following into the repl
-
-import Data.Array as Array
-import Data.Map as Map
-
-import Data.Lens
-import Data.Lens as Lens
-import Data.Lens.Index (ix)
-import Data.Record.ShowRecord
-
--}
-
 import Prelude
-import Data.Array as Array
-import Data.Tuple
+import Data.Tuple (Tuple(..))
 import Data.Map as Map
 import Data.Map (Map)
 import Data.Lens.Index (ix)
@@ -22,6 +9,7 @@ import Data.Lens.At (at, class At)
 import Data.Lens (preview, view, set, over, Lens', lens)
 import Data.Maybe (Maybe(..))
 import Data.Profunctor.Strong
+import Data.Record.ShowRecord
 
 type Animal =
   { tags :: Int
@@ -40,15 +28,46 @@ model =
       ]
   }
 
-modelToMap :: Lens' Model (Map String Animal)
-modelToMap = lens _.animals $ _ { animals = _ }
+modelToAnimals :: Lens' Model (Map String Animal)
+modelToAnimals = lens _.animals $ _ { animals = _ }
+
+{- The following is the type that the compiler suggests:
+     mapToAnimal :: forall b a m. At m a b => a -> (forall p. Strong p => p (Maybe b) (Maybe b) -> p m m)
+   Interestingly, if you uncomment that, you'll get the following error:
+
+  35  mapToAnimal = at
+                    ^^
+  Could not match constrained type
+  
+    Strong t3 => t3 (Maybe t4) (Maybe t4) -> t3 t5 t5
+  
+  with type
+  
+    Strong p6 => p6 (Maybe b1) (Maybe b1) -> p6 m2 m2
 
 
--- mapToAnimal :: forall b a m. At m a b => a -> (forall p. Strong p => p (Maybe b) (Maybe b) -> p m m)
-mapToAnimal = at
+What's up with that? Compiler error?
+
+-}
+  
+animalsToAnimal = at
 
 animalToTags :: Lens' Animal Int
 animalToTags = lens _.tags $ _ { tags = _ }
 
 
+{-
+   What I *want* to say with these three lenses is this:
 
+   modelToTag id =
+     modelToAnimals <<< animalsToAnimal id <<< animalToTags
+
+   I can get partway there with this:
+
+     > :t view (modelToAnimals <<< animalsToAnimal "jake") model
+     Maybe          
+       { tags :: Int
+       }
+
+   ... but I don't know how to add on past that.
+-}
