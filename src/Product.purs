@@ -14,9 +14,10 @@ import Data.Lens as Lens
 
 import Prelude
 import Data.Tuple (Tuple(..), fst)
-import Data.Lens (lens)
+import Data.Lens (lens, Lens, Lens')
 import Data.Lens as Lens
-import Data.Lens.Types (Lens, Lens')
+
+        {- First example of creating a lens. There are terser ways -} 
 
 aTuple :: Tuple String Int
 aTuple = Tuple "one" 1
@@ -30,6 +31,10 @@ first =
   where
     getter = fst
     setter (Tuple _ kept) new = Tuple new kept
+
+
+
+        {- Record lenses -}
 
 type Event = 
   { subject :: String
@@ -45,9 +50,10 @@ duringNetflix = { subject : "Brian"
                 , count : 0
                 }
 
-action :: forall a b ignored . 
-          Lens {action :: a | ignored }
-               {action :: b | ignored }
+-- A verbose way of defining a record lens
+action :: forall a b rest . 
+          Lens {action :: a | rest }
+               {action :: b | rest }
                a b
 action =
   lens getter setter
@@ -55,10 +61,15 @@ action =
     getter = _.action
     setter whole new = whole { action = new }
 
--- count :: Lens Event Event Int Int
-count :: Lens' Event Int    
-count = lens _.count (_ { count = _ })
 
+count :: Lens' Event Int
+-- Could also use the long form:
+-- count :: Lens Event Event Int Int
+count = lens _.count $ _ { count = _ }
+
+
+        {- To demonstrate composition -}
 
 both :: Tuple String Event
 both = Tuple "example" duringNetflix
+   

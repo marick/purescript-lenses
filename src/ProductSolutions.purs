@@ -13,20 +13,19 @@ import Data.Tuple (Tuple(..), fst, snd)
 import Data.Tuple.Nested (T2, T3, T4, get1, get2, get3)
 import Data.Lens (lens, set, view)
 import Data.Lens as Lens
-import Data.Lens.Types (Lens,Lens')
+import Data.Lens.Types (Lens, Lens')
 import Product (both, Event)
 
 
-{-                          Exercise 1                           -}
+        {- Composition Exercise -}
 
--- Step 1:
-
+-- 1:
 
 object :: Lens' Event String
 object = lens _.object (_ { object = _ })
 
 
--- Step 2: Take your pick of these single-line solutions
+-- 2: Take your pick of these single-line solutions
 
 solution1 :: Tuple String String
 solution1 = 
@@ -40,7 +39,6 @@ solution3 :: Tuple String String
 solution3 =   
   flip (set Lens.second) both $ view (Lens.second <<< object) both
 
-
 -- Or, if you want to be one of those *kids these days* with your
 -- "readability" and your "intention-revealing names" and all that:
 
@@ -53,17 +51,11 @@ solution4 =
 
 
 
+        {- Composition Exercise 2 -}
 
 
+-- Part 1:
 
-
-
-
-
-
-{-                          Exercise 2                           -}
-
-    
 set1 :: forall focus rest new.
         T2 focus rest -> new -> T2 new rest
 set1 (Tuple _ rest) new =
@@ -79,7 +71,7 @@ set3 :: forall p1 p2 focus rest new.
 set3 (Tuple head rest) new =
   Tuple head (set2 rest new)
 
-------
+-- Part 2
 
 lens1 :: forall focus new rest.
          Lens (T2 focus rest) (T2 new rest) focus new
@@ -97,10 +89,7 @@ lens3 = lens get3 set3
 
 
 
-
-
-
-{-                          Exercise 3                           -}
+        {-  Law exercise -}
 
 -- An easy was to violate set-get is to use a different focus for the
 -- setter and getter.
