@@ -29,11 +29,12 @@ import Data.Map (Map)
 import Data.StrMap as StrMap
 import Data.StrMap (StrMap)
 
-import Data.Lens (preview, set, over, lens, Lens', -- old
+import Data.Lens (preview, view, set, over, lens, Lens', -- old
                   Traversal') -- new
 import Data.Lens as Lens
 import Data.Lens.Index (ix)
-import Data.Lens.At (at)
+import Data.Lens.At (at, class At)
+import Data.Foldable (and)
 
 
 
@@ -154,7 +155,54 @@ upsertable key =
     setter whole wrapped =
       case wrapped of
         Nothing -> Map.delete key whole
-        Just new -> Map.insert key new whole 
+        Just new -> Map.insert key new whole
+
+-- Laws
+anyKey :: forall val. Lens' (Map String val) (Maybe val)
+anyKey = upsertable "key"
+
+mapWithKey_Present :: Map String String
+mapWithKey_Present = Map.singleton "key" "val"
+
+mapWithKey_Absent :: Map String String
+mapWithKey_Absent = Map.singleton "missing" "val2"
+
+set_get :: Boolean
+set_get =
+  and [ check (Just "NEW") mapWithKey_Present
+      , check (Just "NEW") mapWithKey_Absent
+      , check Nothing mapWithKey_Present
+      , check Nothing mapWithKey_Absent
+      ]
+  where
+    check new whole =
+      (set anyKey new whole # view anyKey) == new
+
+get_set :: Boolean
+get_set =
+  and [ check mapWithKey_Present
+      , check mapWithKey_Absent
+      ]
+  where
+    check whole =
+      set anyKey (view anyKey whole) whole == whole
+
+set_set :: Boolean
+set_set =
+  and [ check (Just "NEW") mapWithKey_Present
+      , check (Just "NEW") mapWithKey_Absent
+      , check Nothing mapWithKey_Present
+      , check Nothing mapWithKey_Absent
+      ]
+  where
+    check new whole =
+       (set anyKey new whole # set anyKey new) ==
+       set anyKey new whole
+
+-- An example of an `at` type declaration:
+x :: forall whole part. At whole String part =>
+       Lens' whole (Maybe part)
+x = at "x"
 
 
 -- How `at` lenses compose with last chapter's lenses:
@@ -192,3 +240,6 @@ whatsit :: forall focus.
                (Array (Map String (Maybe focus)))
                (Maybe focus)
 whatsit = ix 1 <<< at "x" <<< Lens._Just
+
+
+
