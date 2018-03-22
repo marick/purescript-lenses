@@ -15,7 +15,6 @@ import Data.Lens as Lens
 import Prelude
 import Data.Tuple (Tuple(..), fst)
 import Data.Lens (lens, Lens, Lens')
-import Data.Lens as Lens
 
         {- First example of creating a lens. There are terser ways -} 
 
