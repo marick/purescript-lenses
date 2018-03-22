@@ -91,7 +91,7 @@ lens3 = lens get3 set3
 
         {-  Law exercise -}
 
--- An easy was to violate set-get is to use a different focus for the
+-- An easy way to violate set-get is to use a different focus for the
 -- setter and getter.
 
 setGetOops :: forall a. Lens' (Tuple a a) a

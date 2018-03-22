@@ -10,6 +10,8 @@ import Data.String as String
 import Data.Lens (lens, view, set, over)
 import Data.Lens as Lens
 
+import Product
+
 -}
 
 import Prelude
