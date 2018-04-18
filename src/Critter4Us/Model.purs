@@ -26,11 +26,15 @@ type Model =
 
 initialModel :: Model
 initialModel =
-  { animals : Map.singleton startingAnimal.id startingAnimal }
+  { animals : Map.singleton startingAnimal.id startingAnimal
+  }
+  where
+    startingAnimal =
+      Animal.named "Genesis" 3838 # Animal.addTag "mare"
 
 addAnimalTag :: Animal.Id -> String -> Model -> Model
 addAnimalTag id tag =
-  updateAnimal id (Animal.addTag tag)
+  over (oneAnimal id) (map $ Animal.addTag tag)
 
 addAnimal :: Animal.Id -> String -> Model -> Model
 addAnimal id name =
@@ -45,14 +49,6 @@ animals =
 oneAnimal :: Animal.Id -> Lens' Model (Maybe Animal)
 oneAnimal id =
   animals <<< at id 
-
-updateAnimal :: Animal.Id -> (Animal -> Animal) -> Model -> Model
-updateAnimal id f model =
-  over (oneAnimal id) (map f) model
-
-startingAnimal :: Animal
-startingAnimal =
-  Animal.named "Genesis" 3838 # Animal.addTag "mare"
 
 
 {- Debug -}

@@ -5,6 +5,15 @@ module Critter4Us.Main where
 import Critter4Us.Main
 import Critter4Us.Model
 
+> grr initialModel
+" (3838=>{ id: 3838, name: \"Genesis\", tags: [\"mare\"] }"
+
+> grr $ update initialModel (AddAnimal 1 "Bossy")
+" (1=>{ id: 1, name: \"Bossy\", tags: [] } (3838=>{ id: 3838, name: \"Genesis\", tags: [\"mare\"] }"
+
+> grr $ update initialModel (AddTag 3838 "skittish")
+" (3838=>{ id: 3838, name: \"Genesis\", tags: [\"mare\",\"skittish\"] }"
+
 -}
 
 import Prelude

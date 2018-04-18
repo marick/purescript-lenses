@@ -1,6 +1,9 @@
 module Critter4Us.TagDb
   ( empty
   , addTag
+  , TagDb
+  , Tags
+  , Ids
   ) where 
 
 import Prelude
@@ -43,15 +46,12 @@ addTagTo id tag =
 addIdTo :: String -> Animal.Id -> TagDb -> TagDb
 addIdTo tag id = 
   over (tagIds tag) $ appendOrCreate id
-         
+
+-- I can't find a Lens function that does this for me. 
 appendOrCreate :: forall a f. Monoid (f a) => Unfoldable f =>
                   a -> Maybe (f a) -> Maybe (f a)
-appendOrCreate new current =
-  case current of
-    Nothing ->
-      appendOrCreate new mempty
-    Just xs ->
-      Just $ (xs <> singleton new)
+appendOrCreate new (Just xs) = Just $ (xs <> singleton new)
+appendOrCreate new Nothing = appendOrCreate new mempty
 
 -- Lenses
 
