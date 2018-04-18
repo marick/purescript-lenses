@@ -11,14 +11,15 @@ module Critter4Us.Model
 import Prelude
 import Critter4Us.Animal (Animal)
 import Critter4Us.Animal as Animal
+-- import Critter4Us.TagDb (TagDb)
+-- import Critter4Us.TagDb as TagDb
 import Data.Map (Map)
 import Data.Map as Map
 import Data.Lens (Lens', lens, over, setJust)
 import Data.Lens.At (at)
+import Data.Record.ShowRecord (showRecord)
+import Data.FoldableWithIndex (foldMapWithIndex)
 import Data.Maybe (Maybe)
-import Data.Record.ShowRecord
-import Data.Foldable
-import Data.Maybe
 
 type Model =
   { animals :: Map Animal.Id Animal
@@ -54,11 +55,10 @@ oneAnimal id =
 {- Debug -}
 
 -- `Show` a model when maps and records don't implement `Show`
--- I trust there's a better way.
 grr :: Model -> String
-grr {animals} =
-  foldl step "" (Map.keys animals)
+grr model =
+  foldMapWithIndex step model.animals
   where
-    step acc k =
-      acc <> " (" <> show k <> "=>" <> maybe "!?" showRecord (Map.lookup k animals)
+    step k v =
+      "(" <> show k <> "=>" <> showRecord v <> ") "
 
