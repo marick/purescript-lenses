@@ -1,36 +1,32 @@
-module Critter4Us.TagDb where 
+module Critter4Us.TagDb
+  ( empty
+  , addTag
+  ) where 
 
 import Prelude
 import Critter4Us.Animal as Animal
 import Data.Map as Map
 import Data.Map (Map)
-import Data.Lens
+import Data.Lens (Lens', lens, over)
 import Data.Lens.At (at)
-import Data.Maybe
-import Data.Array (snoc)
+import Data.Maybe (Maybe(..))
+import Data.Monoid (class Monoid, mempty)
+import Data.Unfoldable (class Unfoldable, singleton)
 
-type IdToTags = Map Animal.Id (Array String)
-type TagToIds = Map String (Array Animal.Id)
+type Tags = Array String
+type Ids = Array Animal.Id
 
 type TagDb =
-  { allTags :: IdToTags
-  , allIds :: TagToIds
+  { tagsById :: Map Animal.Id Tags
+  , idsByTag :: Map String Ids
   }
 
 empty :: TagDb
 empty =
-  { allTags : Map.empty
-  , allIds : Map.empty
+  { tagsById : Map.empty
+  , idsByTag : Map.empty
   }
 
--- addAnimal : Animal.Id -> List String -> TagDb -> TagDb
--- addAnimal id tags db =
---   let
---     withId =
---       Lens.set (Support.idTags_upsert id) (Just Array.empty) db
---   in
---     List.foldl (addTag id) withId tags
-  
 
 addTag :: Animal.Id -> String -> TagDb -> TagDb
 addTag id tag db = 
@@ -38,44 +34,41 @@ addTag id tag db =
     # addTagTo id tag
     # addIdTo tag id
 
--- --- Helpers
-
--- type alias StringsMapper = Array String -> Array String
--- type alias IdsMapper = Array Animal.Id -> Array Animal.Id
-
--- updateIdTags : Animal.Id -> StringsMapper -> TagDb -> TagDb
--- updateIdTags id = 
---   Lens.update (Support.idTags id)
-
--- updateTagIds: String -> IdsMapper -> TagDb -> TagDb
--- updateTagIds tag =
---   Lens.updateWithDefault (Support.tagIds_upsert tag) Array.empty
+--- Helpers
 
 addTagTo :: Animal.Id -> String -> TagDb -> TagDb
 addTagTo id tag =
-  over (idTags id) (map (flip snoc tag))
+  over (idTags id) $ appendOrCreate tag
 
 addIdTo :: String -> Animal.Id -> TagDb -> TagDb
 addIdTo tag id = 
-  over (tagIds tag) (map (flip snoc id))  
+  over (tagIds tag) $ appendOrCreate id
          
+appendOrCreate :: forall a f. Monoid (f a) => Unfoldable f =>
+                  a -> Maybe (f a) -> Maybe (f a)
+appendOrCreate new current =
+  case current of
+    Nothing ->
+      appendOrCreate new mempty
+    Just xs ->
+      Just $ (xs <> singleton new)
+
 -- Lenses
 
-allTags :: Lens' TagDb IdToTags
-allTags =
-  lens  _.allTags $ _ { allTags = _ } 
+tagsById :: Lens' TagDb (Map Animal.Id Tags)
+tagsById =
+  lens  _.tagsById $ _ { tagsById = _ } 
 
-allIds :: Lens' TagDb TagToIds
-allIds =
-  lens _.allIds $ _ { allIds = _ }
-
+idsByTag :: Lens' TagDb (Map String Ids)
+idsByTag =
+  lens _.idsByTag $ _ { idsByTag = _ }
 
 idTags :: Animal.Id -> Lens' TagDb (Maybe (Array String))
 idTags id =
-  allTags <<< at id
-
+  tagsById <<< at id
 
 tagIds :: String -> Lens' TagDb (Maybe (Array Animal.Id))
 tagIds tag =
-  allIds <<< at tag
+  idsByTag <<< at tag
+
 
