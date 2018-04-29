@@ -7,7 +7,8 @@ module Critter4Us.TagDb
   , Tags
   , Ids
   , grr
-  ) where 
+  )
+  where 
   
 import Prelude
 import Critter4UsRefactored.Animal as Animal
@@ -63,8 +64,10 @@ addIdTo tag id =
 -- I can't find a Lens function that does this for me. 
 appendOrCreate :: forall a f. Monoid (f a) => Unfoldable f =>
                   a -> Maybe (f a) -> Maybe (f a)
-appendOrCreate new (Just xs) = Just $ (xs <> singleton new)
-appendOrCreate new Nothing = appendOrCreate new (Just mempty)
+appendOrCreate new =
+  fromMaybe mempty 
+    >>> (_ <> singleton new)
+    >>> Just
 
 -- Lenses
 

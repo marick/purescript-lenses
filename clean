@@ -1,2 +1,3 @@
 rm -rf output/ArrayMap*
 rm -rf output/Product*
+rm -rf output/SumType*
