@@ -11,6 +11,7 @@ import Data.Lens as Lens
 import Data.Tuple
 import Data.List
 import Data.String as String
+import Data.Map as Map
 
 import Data.Record.ShowRecord
 -}
@@ -26,54 +27,67 @@ import Data.Lens as Lens
 import Control.Monad.Eff.Random
 import Data.List
 import Data.Lens.Index
+import Data.Traversable
 
-all1 = over traversed negate [1, 2]
--- [-1,-2]
-
-all2 = (over traversed negate []) :: Array Int
--- [] 
-
-all3 = set traversed 99 [1, 2]
--- [99,99]
-
-all4 = over traversed negate (Just 3)
--- Just 3
-
-all5 = (over traversed negate $ Right 88) :: Either Int Int
--- (Right -88)
-
-all6 = toListOf traversed [1, 2, 3]
--- (1 : 2 : 3 : Nil)
-
-all7 = toListOf traversed (Just 3)
--- (3 : Nil)
-
-all8 = (toListOf traversed $ Left 5) :: List Int
--- Nil
-
-view1 = view traversed ["D", "a", "w", "n"]
--- "Dawn"
-
-elts1 = firstOf traversed [1, 2, 3]
--- (Just 1)
-
-elts2 = lastOf traversed [1, 2, 3]
--- (Just 3)
-
-elts3 = preview traversed (Right 1)
--- (Just 1)
-
-elts4 = preview traversed [1, 2, 3]
--- (Just 1)
 
 element1 :: Traversal' (Array String) String
 element1 = element 1 traversed
 
-elts5 = preview element1 ["no", "yes!", "no"]
--- (Just "yes!")
-
-elts6 = over element1 String.toUpper ["no", "yes!", "no"]
--- [1,-8888,2]
-
 ix1 :: Traversal' (Array String) String
 ix1 = ix 1
+
+
+--                    Composition
+firsts :: forall focus ignore traversable. Traversable traversable =>
+          Traversal' (traversable (Tuple focus ignore)) focus
+firsts = traversed <<< _1
+
+
+firsts' :: forall trav a b ignore. Traversable trav => 
+           Traversal (trav (Tuple a ignore)) (trav (Tuple b ignore))
+           a b
+firsts' = traversed <<< _1
+
+
+
+firstThenTraverse :: forall trav a b ignore.
+                     Traversable trav =>
+                     Traversal (Tuple (trav a) ignore) (Tuple (trav b) ignore)
+                     a b 
+firstThenTraverse = _1 <<< traversed
+
+
+
+
+depth2 :: forall t1 t2 a b.
+          Traversable t1 => Traversable t2 =>
+          Traversal (t1 (t2 a)) (t1 (t2 b)) a b
+depth2 = traversed <<< traversed
+
+
+ixTraversable :: forall a. Traversal' (Array (Array a)) a
+ixTraversable = traversed <<< ix 0
+
+ixTraversable' :: forall t1 t2 a.
+                  Traversable t1 => 
+                  Index (t2 a) Int a => 
+                  Traversal' (t1 (t2 a)) a
+ixTraversable' = traversed <<< ix 0
+
+ixTraversable'' :: forall t1 t2 index a.
+                   Traversable t1 => 
+                   Index (t2 a) index a => 
+                   index -> Traversal' (t1 (t2 a)) a
+ixTraversable'' index = traversed <<< ix index
+
+-- The following will not compile because a traversal containing an
+-- `Index` can't change types.
+
+{-
+ixBogus :: forall t1 t2 index a b.
+           Traversable t1 => 
+           Index (t2 a) index a => 
+           index -> Traversal (t1 (t2 a)) (t1 (t2 b)) a b
+ixBogus index = traversed <<< ix index
+
+-}

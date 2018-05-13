@@ -38,13 +38,6 @@ import Data.Foldable (and)
 
 
 
-
-
-
-
-
-
-
 {- A bunch of exampls of the optic `ix` produces -}
 
 
