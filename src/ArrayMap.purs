@@ -35,49 +35,6 @@ import Data.Lens.Index (ix)
 import Data.Lens.At (at, class At)
 import Data.Foldable (and)
 
-
-
-{- A bunch of exampls of the optic `ix` produces -}
-
-{-
-
-preview (ix 1) [0, 1, 2]
--- Just 1
-preview (ix 1) [0]
--- Nothing
-
-set (ix 1) 8888 [0, 1, 2]
--- [0,8888,2]
-set (ix 1) 8888 [0]
--- [0]
-
-over (ix 1) negate [0, 1, 2]
--- [0,-1,2]
-over (ix 1) negate [0]
-
--- Same optic, but applied to maps.
-
-preview (ix 1) $ Map.singleton 1  "found"
--- (Just "found")
-preview (ix 1) $ Map.singleton 99 "extra"
--- Nothing
-
-set (ix 1) "new" $ Map.singleton 1  "found"
--- (fromFoldable [(Tuple 1 "new")])
-set (ix 1) "new" $ Map.singleton 99 "found"
--- (fromFoldable [(Tuple 99 "found")])
-
-
--- Using `ix` with non-integer arguments.
-
-preview (ix "key") $ StrMap.fromFoldable [Tuple "key" "val"]
--- (Just "val")
-
-set (ix "key") "val2" $ StrMap.fromFoldable [Tuple "nokey" "val"]
--- (fromFoldable [(Tuple "nokey" "val")]) -- No change
-
--}
-
         {- Composing optics -} 
 
 
@@ -136,8 +93,8 @@ _upsertable key =
         Just new -> Map.insert key new whole
 
 -- Laws
-_anyKey :: forall val. Lens' (Map String val) (Maybe val)
-_anyKey = _upsertable "key"
+_someKey :: forall val. Lens' (Map String val) (Maybe val)
+_someKey = _upsertable "key"
 
 mapWithKey_Present :: Map String String
 mapWithKey_Present = Map.singleton "key" "val"
@@ -154,7 +111,7 @@ set_get =
       ]
   where
     check new whole =
-      (set _anyKey new whole # view _anyKey) == new
+      (set _someKey new whole # view _someKey) == new
 
 get_set :: Boolean
 get_set =
@@ -163,7 +120,7 @@ get_set =
       ]
   where
     check whole =
-      set _anyKey (view _anyKey whole) whole == whole
+      set _someKey (view _someKey whole) whole == whole
 
 set_set :: Boolean
 set_set =
@@ -174,8 +131,8 @@ set_set =
       ]
   where
     check new whole =
-       (set _anyKey new whole # set _anyKey new) ==
-       set _anyKey new whole
+       (set _someKey new whole # set _someKey new) ==
+       set _someKey new whole
 
 -- An example of an `at` type declaration:
 _x :: forall whole part. At whole String part =>

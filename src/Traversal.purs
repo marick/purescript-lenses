@@ -30,7 +30,6 @@ import Data.Lens.At (class At, at)
 import Data.Map (Map)
 import Data.Map as Map
 
-
 element1 :: Traversal' (Array String) String
 element1 = element 1 traversed
 
