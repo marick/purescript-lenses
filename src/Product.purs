@@ -52,21 +52,21 @@ duringNetflix = { subject : "Brian"
                 }
 
 -- A verbose way of defining a record lens
-action :: forall a b rest . 
-          Lens {action :: a | rest }
-               {action :: b | rest }
-               a b
-action =
+_action :: forall a b rest . 
+           Lens {action :: a | rest }
+                {action :: b | rest }
+                a b
+_action =
   lens getter setter
   where
     getter = _.action
     setter whole new = whole { action = new }
 
 
-count :: Lens' Event Int
+_count :: Lens' Event Int
 -- Could also use the long form:
--- count :: Lens Event Event Int Int
-count = lens _.count $ _ { count = _ }
+-- _count :: Lens Event Event Int Int
+_count = lens _.count $ _ { count = _ }
 
 
         {- To demonstrate composition -}
