@@ -2,32 +2,29 @@ module Product where
 
 {- Paste the following into the repl
 
-import Data.Tuple (Tuple(..), fst, snd)
-import Data.String.Yarn as String
-import Data.Record.ShowRecord
-import Data.String as String
-
-import Data.Lens (lens, view, set, over)
-import Data.Lens as Lens
-
 import Product
+import Data.Lens (lens, view, set, over)
 
+import Data.Tuple
+import Data.Record.ShowRecord (showRecord)
+import Data.String as String
+import Data.String.Yarn as String
 -}
 
 import Prelude
 import Data.Tuple (Tuple(..), fst)
 import Data.Lens (lens, Lens, Lens')
 
-        {- First example of creating a lens. There are terser ways -} 
+        {- Section: Tuple -} 
 
 aTuple :: Tuple String Int
 aTuple = Tuple "one" 1
 
-first :: forall a b ignored .
-         Lens (Tuple a ignored)
-              (Tuple b ignored)
-              a b 
-first =
+_first :: forall a b ignored .
+          Lens (Tuple a ignored)
+               (Tuple b ignored)
+               a b 
+_first =
   lens getter setter
   where
     getter = fst
@@ -35,7 +32,7 @@ first =
 
 
 
-        {- Record lenses -}
+        {- Section: Records -}
 
 type Event = 
   { subject :: String
@@ -69,7 +66,7 @@ _count :: Lens' Event Int
 _count = lens _.count $ _ { count = _ }
 
 
-        {- To demonstrate composition -}
+        {- Section: Composing lenses -}
 
 both :: Tuple String Event
 both = Tuple "example" duringNetflix

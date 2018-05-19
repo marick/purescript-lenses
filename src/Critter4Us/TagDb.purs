@@ -44,22 +44,22 @@ addTag id tag db =
 
 tagsFor :: Animal.Id -> TagDb -> Tags
 tagsFor id tagDb =
-  view (idTags id) tagDb # fromMaybe []
+  view (_idTags id) tagDb # fromMaybe []
 
 idsFor :: String -> TagDb -> Ids
 idsFor name tagDb = 
-  view (tagIds name) tagDb # fromMaybe []
+  view (_tagIds name) tagDb # fromMaybe []
 
 
 --- Helpers
 
 addTagTo :: Animal.Id -> String -> TagDb -> TagDb
 addTagTo id tag =
-  over (idTags id) $ appendOrCreate tag
+  over (_idTags id) $ appendOrCreate tag
 
 addIdTo :: String -> Animal.Id -> TagDb -> TagDb
 addIdTo tag id = 
-  over (tagIds tag) $ appendOrCreate id
+  over (_tagIds tag) $ appendOrCreate id
 
 -- I can't find a Lens function that does this for me. 
 appendOrCreate :: forall a f. Monoid (f a) => Unfoldable f =>
@@ -71,21 +71,21 @@ appendOrCreate new =
 
 -- Lenses
 
-tagsById :: Lens' TagDb (Map Animal.Id Tags)
-tagsById =
+_tagsById :: Lens' TagDb (Map Animal.Id Tags)
+_tagsById =
   lens  _.tagsById $ _ { tagsById = _ } 
 
-idsByTag :: Lens' TagDb (Map String Ids)
-idsByTag =
+_idsByTag :: Lens' TagDb (Map String Ids)
+_idsByTag =
   lens _.idsByTag $ _ { idsByTag = _ }
 
-idTags :: Animal.Id -> Lens' TagDb (Maybe (Array String))
-idTags id =
-  tagsById <<< at id
+_idTags :: Animal.Id -> Lens' TagDb (Maybe (Array String))
+_idTags id =
+  _tagsById <<< at id
 
-tagIds :: String -> Lens' TagDb (Maybe (Array Animal.Id))
-tagIds tag =
-  idsByTag <<< at tag
+_tagIds :: String -> Lens' TagDb (Maybe (Array Animal.Id))
+_tagIds tag =
+  _idsByTag <<< at tag
 
 
 -- `show`

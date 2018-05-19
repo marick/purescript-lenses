@@ -35,21 +35,21 @@ initialModel =
 
 addAnimalTag :: Animal.Id -> String -> Model -> Model
 addAnimalTag id tag =
-  over (oneAnimal id) (map $ Animal.addTag tag)
+  over (_oneAnimal id) (map $ Animal.addTag tag)
 
 addAnimal :: Animal.Id -> String -> Model -> Model
 addAnimal id name =
-  setJust (oneAnimal id) (Animal.named name id)
+  setJust (_oneAnimal id) (Animal.named name id)
 
 {- Internal -}
 
-animals :: Lens' Model (Map Animal.Id Animal) 
-animals =
+_animals :: Lens' Model (Map Animal.Id Animal) 
+_animals =
   lens _.animals $ _ { animals = _ }
 
-oneAnimal :: Animal.Id -> Lens' Model (Maybe Animal)
-oneAnimal id =
-  animals <<< at id 
+_oneAnimal :: Animal.Id -> Lens' Model (Maybe Animal)
+_oneAnimal id =
+  _animals <<< at id 
 
 
 {- Debug -}
