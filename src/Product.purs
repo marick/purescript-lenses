@@ -3,7 +3,7 @@ module Product where
 {- Paste the following into the repl
 
 import Product
-import Data.Lens (lens, view, set, over)
+import Data.Lens (lens, view, set, over, _1, _2)
 
 import Data.Tuple
 import Data.Record.ShowRecord (showRecord)
@@ -13,24 +13,30 @@ import Data.String.Yarn as String
 
 import Prelude
 import Data.Tuple (Tuple(..), fst)
-import Data.Lens (lens, Lens, Lens')
+import Data.Lens (lens, Lens, Lens', _2)
+import Data.Profunctor.Strong (class Strong)
 
         {- Section: Tuple -} 
 
 aTuple :: Tuple String Int
 aTuple = Tuple "one" 1
 
-_first :: forall a b ignored .
-          Lens (Tuple a ignored)
-               (Tuple b ignored)
-               a b 
+
+-- For this annotation, I'm using the same type the compiler would infer:
+_first :: forall p t6 t7 t8. Strong p =>
+          p t6 t8 -> p (Tuple t6 t7) (Tuple t8 t7)
 _first =
   lens getter setter
   where
     getter = fst
     setter (Tuple _ kept) new = Tuple new kept
 
-
+-- A more readable type annotation would be this:
+_first' :: forall a b ignored .
+           Lens (Tuple a ignored)
+                (Tuple b ignored)
+                a b 
+_first' = _first
 
         {- Section: Records -}
 
@@ -70,4 +76,6 @@ _count = lens _.count $ _ { count = _ }
 
 both :: Tuple String Event
 both = Tuple "example" duringNetflix
-   
+
+_bothCount :: Lens' (Tuple String Event) Int
+_bothCount = _2 <<< _count

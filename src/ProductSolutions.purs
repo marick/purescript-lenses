@@ -3,7 +3,7 @@ module ProductSolutions where
 {- To help with the second exercise, paste the following into the repl:
 
 import Data.Tuple.Nested 
-import Data.Lens (lens, view, set, over)
+import Data.Lens
 import Data.Lens as Lens
  
 -}
@@ -13,9 +13,8 @@ import Product (both, Event)
 import Prelude
 import Data.Tuple (Tuple(..), fst, snd)
 import Data.Tuple.Nested (T2, T3, T4, get1, get2, get3)
-import Data.Lens (lens, set, view, _2)
-import Data.Lens as Lens
-import Data.Lens.Types (Lens, Lens')
+import Data.Lens (lens, set, view, over, _2, Lens, Lens')
+import Data.Record.ShowRecord (showRecord)
 
 
         {- Composition Exercise -}
@@ -25,8 +24,12 @@ import Data.Lens.Types (Lens, Lens')
 _object :: Lens' Event String
 _object = lens _.object (_ { object = _ })
 
+-- 2: showRecord
 
--- 2: Take your pick of these single-line solutions
+showed :: Tuple String String
+showed = over _2 showRecord both
+
+-- 3: Take your pick of these single-line solutions
 
 solution1 :: Tuple String String
 solution1 = 
@@ -48,7 +51,7 @@ solution4 =
   let
     new = view (_2 <<< _object) both
   in 
-    Lens.set _2 new both
+    set _2 new both
 
 
 

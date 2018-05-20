@@ -3,7 +3,7 @@ module ProductExercises where
 {- Paste the following into the repl
 
 import Data.Tuple.Nested 
-import Data.Lens (lens, view, set, over, _2)
+import Data.Lens
 import Data.Lens as Lens
  
 -}
@@ -18,8 +18,7 @@ import Product (both, Event)
 import Prelude
 import Data.Tuple (Tuple(..), fst, snd)
 import Data.Tuple.Nested (T2, T3, T4, get1, get2, get3)
-import Data.Lens (lens, set, view, _2)
-import Data.Lens as Lens
-import Data.Lens.Types (Lens, Lens')
+import Data.Lens (lens, set, view, over, _2, Lens, Lens')
+import Data.Record.ShowRecord (showRecord)
 
 -}

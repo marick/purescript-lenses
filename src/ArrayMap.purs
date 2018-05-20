@@ -11,7 +11,6 @@ import Data.StrMap as StrMap
 import Data.Set as Set
 
 import Data.Lens
-import Data.Lens as Lens
 import Data.Lens.Index (ix)
 import Data.Lens.At (at)
 
@@ -28,12 +27,15 @@ import Data.Maybe (Maybe(..))
 import Data.Map as Map
 import Data.Map (Map)
 
-import Data.Lens (view, set, lens, Lens', -- old
-                  Traversal') -- new
-import Data.Lens as Lens
+import Data.Lens (view, set, lens, Lens', _2, Traversal', _Just)
 import Data.Lens.Index (ix)
 import Data.Lens.At (at, class At)
 import Data.Foldable (and)
+
+        {- The type of `ix 1` -}
+
+ix1 :: forall a. Traversal' (Array a) a
+ix1 = ix 1
 
         {- Composing optics -} 
 
@@ -149,7 +151,7 @@ _tupleMap :: forall ignore val.
                 Lens'
                   (Tuple ignore (Map String val))
                   (Maybe val)
-_tupleMap = Lens.second <<< at "x"
+_tupleMap = _2 <<< at "x"
 
 
 
@@ -180,7 +182,7 @@ arrayMapTyped = ix 1 <<< at "x"
 
 arrayMapJust :: forall focus.
                 Traversal' (Array (Map String focus)) focus
-arrayMapJust = ix 1 <<< at "x" <<< Lens._Just
+arrayMapJust = ix 1 <<< at "x" <<< _Just
 
 -- The versions with and without `Just` have very similar types.
 
@@ -188,7 +190,7 @@ whatsit :: forall focus.
              Traversal'
                (Array (Map String (Maybe focus)))
                (Maybe focus)
-whatsit = ix 1 <<< at "x" <<< Lens._Just
+whatsit = ix 1 <<< at "x" <<< _Just
 
 
 
