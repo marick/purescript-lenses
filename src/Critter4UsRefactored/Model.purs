@@ -3,8 +3,6 @@ module Critter4UsRefactored.Model
   , initialModel
   , addAnimal
   , addAnimalTag
-
-  , grr
   )
   where
 
@@ -17,7 +15,6 @@ import Data.Map (Map)
 import Data.Map as Map
 import Data.Lens (Lens', lens, over, setJust)
 import Data.Lens.At (at)
-import Data.Record.ShowRecord (showRecord)
 import Data.FoldableWithIndex (foldMapWithIndex)
 import Data.Maybe (Maybe)
 
@@ -58,16 +55,3 @@ _oneAnimal id =
   _animals <<< at id 
 
 
-{- Debug -}
-
--- `Show` a model when maps and records don't implement `Show`. When changing this
--- to show TagDb, replace the first line with the commented lines below.
-grr :: Model -> String
-grr model =
-  "ANIMALS  " <>
-  foldMapWithIndex step model.animals <> 
-  " === TAGDB " <>
-  TagDb.grr model.tagDb
-  where
-    step k v =
-      "(" <> show k <> "=>" <> showRecord v <> ")"

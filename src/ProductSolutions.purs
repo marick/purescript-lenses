@@ -14,7 +14,6 @@ import Prelude
 import Data.Tuple (Tuple(..), fst, snd)
 import Data.Tuple.Nested (T2, T3, T4, get1, get2, get3)
 import Data.Lens (lens, set, view, over, _2, Lens, Lens')
-import Data.Record.ShowRecord (showRecord)
 
 
         {- Composition Exercise -}
@@ -27,7 +26,7 @@ _object = lens _.object (_ { object = _ })
 -- 2: showRecord
 
 showed :: Tuple String String
-showed = over _2 showRecord both
+showed = over _2 show both
 
 -- 3: Take your pick of these single-line solutions
 

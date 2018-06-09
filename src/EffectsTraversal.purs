@@ -10,7 +10,6 @@ import Data.Tuple
 import Data.List
 import Data.String as String
 
-import Data.Record.ShowRecord
 import Control.Monad.Eff.Random
 import Data.Traversable
 -}
@@ -18,7 +17,7 @@ import Data.Traversable
 import Prelude
 import Data.Lens
 import Data.Lens as Lens
-import Control.Monad.Eff.Random
+import Effect.Random
 import Data.Traversable
 import Data.Maybe
 

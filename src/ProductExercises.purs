@@ -19,6 +19,5 @@ import Prelude
 import Data.Tuple (Tuple(..), fst, snd)
 import Data.Tuple.Nested (T2, T3, T4, get1, get2, get3)
 import Data.Lens (lens, set, view, over, _2, Lens, Lens')
-import Data.Record.ShowRecord (showRecord)
 
 -}

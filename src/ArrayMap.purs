@@ -16,8 +16,6 @@ import Data.Lens.At (at)
 
 import ArrayMap
 
-import Data.Record.ShowRecord
-
 -}
 
 import Prelude

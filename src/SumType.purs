@@ -9,7 +9,6 @@ import Color as Color
 import Data.Maybe
 import Data.Either
 import Data.Tuple
-import Data.Record.ShowRecord (showRecord)
 -}
 
 import Prelude
@@ -21,7 +20,6 @@ import Color as Color
 import Data.Generic.Rep (class Generic)
 import Data.Generic.Rep.Eq as GEq
 import Data.Generic.Rep.Show as GShow
-import Data.Record.ShowRecord (showRecord)
 import Data.Maybe (Maybe(..), maybe)
 import Data.Either (Either(..))
 import Data.Tuple
@@ -157,7 +155,7 @@ radialFocus = prism constructor focus
 -- used the same way:
 
 l1 :: String
-l1 = preview radialFocus fillRadial # maybe "!" showRecord
+l1 = preview radialFocus fillRadial # maybe "!" show
 -- "{ color1: rgba 0 0 0 1.0, color2: rgba 255 255 255 1.0, percent: (3.3%) }"
 
 l2 :: Fill

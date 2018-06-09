@@ -14,7 +14,6 @@ import Data.Map as Map
 import Data.Lens.Index (ix)
 import Data.Lens.At (at)
 
-import Data.Record.ShowRecord (showRecord)
 -}
 
 import Prelude
