@@ -15,7 +15,6 @@ import Data.Map (Map)
 import Data.Map as Map
 import Data.Lens (Lens', lens, over, setJust)
 import Data.Lens.At (at)
-import Data.FoldableWithIndex (foldMapWithIndex)
 import Data.Maybe (Maybe)
 
 type Model =

@@ -6,7 +6,6 @@ module Critter4Us.TagDb
   , TagDb
   , Tags
   , Ids
-  , grr
   )
   where 
   
@@ -17,9 +16,7 @@ import Data.Map (Map)
 import Data.Lens (Lens', lens, over, view)
 import Data.Lens.At (at)
 import Data.Maybe (Maybe(..), fromMaybe)
-import Data.Monoid (class Monoid, mempty)
 import Data.Unfoldable (class Unfoldable, singleton)
-import Data.FoldableWithIndex (foldMapWithIndex)
 
 type Tags = Array String
 type Ids = Array Animal.Id
@@ -86,15 +83,4 @@ _idTags id =
 _tagIds :: String -> Lens' TagDb (Maybe (Array Animal.Id))
 _tagIds tag =
   _idsByTag <<< at tag
-
-
--- `show`
-
-grr :: TagDb -> String
-grr tagDb =
-  foldMapWithIndex step tagDb.tagsById <> foldMapWithIndex step tagDb.idsByTag
-  where
-    step :: forall k v. Show k => Show v => k -> v -> String
-    step k v =
-      "(" <> show k <> "=>" <> show v <> ")"
 

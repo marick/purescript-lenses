@@ -14,6 +14,7 @@ import Data.String as String
 
 import Data.Lens
 import Data.Lens.At (at)
+import Foreign.Object as Object
 
 -}
 
@@ -23,12 +24,9 @@ import Data.Maybe (Maybe(..))
 
 import Data.Map as Map
 import Data.Map (Map)
-import Foreign.Object as Object
-import Foreign.Object (Object)
-import Data.Set as Set
 import Data.Set (Set)
 
-import Data.Lens (view, set, lens, Lens', _1, _2, Traversal', _Just)
+import Data.Lens (lens, Lens', _1, _2)
 import Data.Lens.At (at, class At)
 
 
@@ -67,13 +65,6 @@ _at3' = _at3
 
 _element :: forall a . Ord a => a -> Lens' (Set a) (Maybe Unit)
 _element x = at x
-
--- composed :: forall elt1 elt2 at key focus .
---             At key at focus =>
---             Lens'
---               (Tuple (Tuple (at key focus) a) b)
---                          (Maybe focus)
-
 
 composed :: forall collection focus a b .
   At collection Int focus => 

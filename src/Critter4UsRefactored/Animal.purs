@@ -6,10 +6,6 @@ module Critter4UsRefactored.Animal
   )
   where
 
-import Prelude
-import Data.Lens (Lens', lens, over, set)
-import Data.Array (snoc)
-
 type Id = Int
 type Tags = Array String
 

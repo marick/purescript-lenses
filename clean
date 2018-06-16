@@ -1,3 +1,5 @@
 rm -rf output/ArrayMap*
 rm -rf output/Product*
 rm -rf output/SumType*
+rm -rf output/Map*
+rm -rf output/Critter4Us*
