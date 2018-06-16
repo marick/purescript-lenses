@@ -63,6 +63,15 @@ _at3 = at 3
 _at3' :: forall t3. Lens' (Map Int t3) (Maybe t3)
 _at3' = _at3
 
+--
+
+type Rec= { field :: Maybe Int }
+
+_field :: Lens' Rec (Maybe Int)
+_field = lens _.field $ _ { field = _ }
+
+
+
 _element :: forall a . Ord a => a -> Lens' (Set a) (Maybe Unit)
 _element x = at x
 
