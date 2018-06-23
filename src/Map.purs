@@ -55,12 +55,12 @@ _atKey key =
 
 
 
-_at3 :: forall t1 t3. At t1 Int t3 =>
-        Lens' t1 (Maybe t3)
+_at3 :: forall whole part. At whole Int part =>
+        Lens' whole (Maybe part)
 _at3 = at 3        
 
 
-_at3' :: forall t3. Lens' (Map Int t3) (Maybe t3)
+_at3' :: forall part. Lens' (Map Int part) (Maybe part)
 _at3' = _at3
 
 --
@@ -75,9 +75,9 @@ _field = lens _.field $ _ { field = _ }
 _element :: forall a . Ord a => a -> Lens' (Set a) (Maybe Unit)
 _element x = at x
 
-composed :: forall collection focus a b .
-  At collection Int focus => 
+composed :: forall focus focusHolder _1_ _2_ .
+  At focusHolder Int focus => 
   Lens'
-    (Tuple (Tuple a collection) b)
+    (Tuple (Tuple _1_ focusHolder) _2_)
     (Maybe focus)
 composed = _1 <<< _2 <<< at 3
