@@ -2,6 +2,7 @@ module ProductSolutions where
 
 {- To help with the second exercise, paste the following into the repl:
 
+import Product
 import Data.Tuple.Nested 
 import Data.Lens
 import Data.Lens as Lens
@@ -23,10 +24,10 @@ import Data.Lens (lens, set, view, over, _2, Lens, Lens')
 _object :: Lens' Event String
 _object = lens _.object (_ { object = _ })
 
--- 2: showRecord
+-- 2: show
 
-showed :: Tuple String String
-showed = over _2 show both
+stringified :: Tuple String String
+stringified = over _2 show both
 
 -- 3: Take your pick of these single-line solutions
 
@@ -54,7 +55,7 @@ solution4 =
 
 
 
-        {- Composition Exercise 2 -}
+        {- The Second Composition Exercise -}
 
 
 -- Part 1:
