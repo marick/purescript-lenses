@@ -9,10 +9,10 @@ import Critter4Us.Model
 { animals: (fromFoldable [(Tuple 3838 { id: 3838, name: "Genesis", tags: ["mare"] })]) }
 
 > update initialModel (AddAnimal 1 "Bossy")
-"(1=>{ id: 1, name: \"Bossy\", tags: [] }) (3838=>{ id: 3838, name: \"Genesis\", tags: [\"mare\"] }) "
+{ animals: (fromFoldable [(Tuple 1 { id: 1, name: "Bossy", tags: [] }),(Tuple 3838 { id: 3838, name: "Genesis", tags: ["mare"] })]) }
 
 > update initialModel (AddTag 3838 "skittish")
-"(3838=>{ id: 3838, name: \"Genesis\", tags: [\"mare\",\"skittish\"] }) "
+{ animals: (fromFoldable [(Tuple 3838 { id: 3838, name: "Genesis", tags: ["mare","skittish"] })]) }
 
 -}
 
