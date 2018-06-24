@@ -6,9 +6,9 @@ import Critter4UsRefactored.Main
 import Critter4UsRefactored.Model
 import Critter4Us.TagDb (tagsFor, idsFor)
 
-grr initialModel
-grr $ update initialModel (AddAnimal 1 "Bossy")
-grr $ update initialModel (AddTag 3838 "skittish")
+initialModel
+update initialModel (AddAnimal 1 "Bossy")
+update initialModel (AddTag 3838 "skittish")
 
 m = update initialModel (AddTag 3838 "skittish")
 tagsFor 3838 m.tagDb
