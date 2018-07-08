@@ -33,10 +33,6 @@ _element1 :: Traversal' (Array String) String
 _element1 = element 1 traversed
 
 
-{-                    Composition          -}
-
--- Types explained in the text
-
 _trav_1 :: forall traversable a b _1_.
           Traversable traversable => 
           Traversal (traversable (Tuple a _1_))
@@ -44,26 +40,6 @@ _trav_1 :: forall traversable a b _1_.
                     a b
 _trav_1 = traversed <<< _1
 
-_at_trav_1 :: forall a _1_ . 
-             Traversal' (Map Int (Tuple a _1_)) a
-_at_trav_1 = at 3 <<< traversed <<< _1
-
-tupleMap = Map.fromFoldable [ (Tuple 3 (Tuple 8 "s"))
-                            , (Tuple 4 (Tuple 1 "_2_"))]
-
-
-_trav_at :: forall trav keyed a.
-            Traversable trav => At keyed Int a =>
-            Traversal' (trav keyed) (Maybe a)
-_trav_at = traversed <<< at 3
-
-
-
-
-mapArray = [ Map.singleton 3 "3"
-           , Map.empty
-           , Map.singleton 4 "4"
-           ]
 
 
 
@@ -77,7 +53,28 @@ _trav_trav :: forall a b trav1 trav2 .
 _trav_trav = traversed <<< traversed
 
 
-_1_trav :: forall trav a _1_ .
+_1_trav :: forall trav a b _1_ .
            Traversable trav =>
-           Traversal' (Tuple (trav a) _1_) a
+           Traversal (Tuple (trav a) _1_)
+                     (Tuple (trav b) _1_)
+                     a b
 _1_trav = _1 <<< traversed
+
+
+_trav_at :: forall trav keyed a.
+            Traversable trav => At keyed Int a =>
+            Traversal' (trav keyed) (Maybe a)
+_trav_at = traversed <<< at 3
+
+mapArray = [ Map.singleton 3 "3"
+           , Map.empty
+           , Map.singleton 4 "4"
+           ]
+
+_at_trav_1 :: forall a _1_ . 
+             Traversal' (Map Int (Tuple a _1_)) a
+_at_trav_1 = at 3 <<< traversed <<< _1
+
+tupleMap = Map.fromFoldable [ (Tuple 3 (Tuple 8 "s"))
+                            , (Tuple 4 (Tuple 1 "_2_"))]
+
