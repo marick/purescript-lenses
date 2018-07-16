@@ -101,6 +101,17 @@ _trav_at3 :: forall trav keyed a.
                Traversal' (trav keyed) (Maybe a)
 _trav_at3 = traversed <<< at 3
 
+-- Why must `s` be the same as `t` and `a` be the same as `b`?
+--
+-- Consider this:
+--
+-- set _trav_at3 5 [Map.singleton 3 "3", Map.singleton 4 "4"]
+--
+-- If the optic could change the type, the result would be
+-- this nonsensical array:
+--
+-- [Map.singleton 3 5, Map.singleton 4 "4"]
+
 
 _at3_trav_1' :: forall a _1_ keyed .
                 At keyed Int a => 
