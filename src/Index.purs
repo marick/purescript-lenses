@@ -36,7 +36,7 @@ _trav_ix1 :: forall trav indexed a.
              Traversable trav => Index indexed Int a =>
                Traversal' (trav indexed) a
 
-_trav_ix1 = traversed <<< ix1
+_trav_ix1 = traversed <<< ix 1
 
 
 _ix1_trav :: forall indexed trav a.
@@ -69,3 +69,9 @@ _ix1_at1 :: forall indexed keyed a.
             Index indexed Int keyed => At keyed Int a => 
             Traversal' indexed (Maybe a)
 _ix1_at1 = ix 1 <<< at 1
+
+_ix1_ix1 :: forall indexed1 indexed2 a.
+            Index indexed1 Int indexed2 =>
+            Index indexed2 Int a =>
+            Traversal' indexed1 a
+_ix1_ix1 = ix 1 <<< ix 1
