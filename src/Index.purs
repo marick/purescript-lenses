@@ -26,9 +26,9 @@ _at1 :: forall s a . At s Int a =>
        Lens' s (Maybe a)
 _at1 = at 1
 
-ix1 :: forall s a . Index s Int a =>
-       Traversal' s a
-ix1 = ix 1
+_ix1 :: forall s a . Index s Int a =>
+        Traversal' s a
+_ix1 = ix 1
 
                                  {- Composition -}
 
