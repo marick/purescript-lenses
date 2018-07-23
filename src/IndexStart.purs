@@ -1,10 +1,10 @@
 module IndexStart where
 
-import Prelude
-
 -- Exercises for the chapter on `Index` optics.
 
 {- 
+
+import Prelude
 
 import Data.Maybe
 import Data.Lens
