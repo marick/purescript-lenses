@@ -54,8 +54,8 @@ fillRadial = RadialGradient Color.white Color.black $ Point 1.0 3.4
 -- constructor for the type in question. The other converts your
 -- desired case to a `Just <wrapped values>` or `Nothing`.
 
-solidFocus :: Prism' Fill Color
-solidFocus = prism' constructor focus
+_solidFocus :: Prism' Fill Color
+_solidFocus = prism' constructor focus
   where
     constructor = Solid
     focus fill = case fill of
@@ -64,8 +64,8 @@ solidFocus = prism' constructor focus
 
 -- In real life, you might abbreviate the above to this:
 
-solidFocus' :: Prism' Fill Color
-solidFocus' = prism' Solid case _ of
+_solidFocus' :: Prism' Fill Color
+_solidFocus' = prism' Solid case _ of
   Solid color -> Just color
   _ -> Nothing
 
@@ -75,42 +75,65 @@ solidFocus' = prism' Solid case _ of
 -- After building a prism, you focus in on a color with `preview`:
 
 s1 :: Maybe Color
-s1 = preview solidFocus (Solid Color.white)
+s1 = preview _solidFocus (Solid Color.white)
 -- (Just rgba 255 255 255 1.0)
 
 s2 :: Maybe Color
-s2 = preview solidFocus fillRadial
+s2 = preview _solidFocus fillRadial
 -- Nothing
 
 -- ... or you can create a Fill from a color with `review`:
 
 s3 :: Fill
-s3 = review solidFocus Color.white
+s3 = review _solidFocus Color.white
 -- (Solid rgba 255 255 255 1.0)
 
 -- ... or you can ask whether a given value matches the prism:
 
 s4 :: Boolean
-s4 = is solidFocus (Solid Color.white) :: Boolean
+s4 = is _solidFocus (Solid Color.white) :: Boolean
 -- true
 
 s5 :: Boolean
-s5 = isn't solidFocus (Solid Color.white) :: Boolean
+s5 = isn't _solidFocus (Solid Color.white) :: Boolean
 -- false
 
 
                 {------ Making prisms with Either and `prism` ------}
 
-anotherSolidFocus :: Prism' Fill Color
-anotherSolidFocus = prism Solid case _ of
+_anotherSolidFocus :: Prism' Fill Color
+_anotherSolidFocus = prism Solid case _ of
   Solid color -> Right color
   otherCases -> Left otherCases
 
 
-                {------ Making prisms with Eq and `only` ------}
+                {------ Making prisms with `only` ------}
 
-onlySolidWhite :: Prism' Fill Unit
-onlySolidWhite = only (Solid Color.white)
+_solidWhite :: Prism' Fill Unit
+_solidWhite = only (Solid Color.white)
+
+-- To make the above work, I had to make `Fill` implement `class Eq`. See the
+-- end of the file for how. (There may be easier methods these days.)
+
+                {------ Making prisms with `nearly` ------}
+
+_solidWhite' :: Prism' Fill Unit
+_solidWhite' =
+  nearly (Solid Color.white) case _ of
+    Solid color -> color == Color.white
+    _ -> false
+    
+  
+
+
+
+
+
+
+
+
+
+    
 
 
                 {------ Multiple wrapped values ------}
@@ -118,8 +141,8 @@ onlySolidWhite = only (Solid Color.white)
 
 -- This would violate the lens laws:
 
-radialPointFocus :: Prism' Fill Point
-radialPointFocus = prism' constructor focus
+_radialPointFocus :: Prism' Fill Point
+_radialPointFocus = prism' constructor focus
   where
     focus = case _ of
       RadialGradient _ _ point -> Just point
@@ -136,8 +159,8 @@ type RadialInterchange =
   , center :: Point
   }
 
-radialFocus :: Prism' Fill RadialInterchange
-radialFocus = prism constructor focus
+_radialFocus :: Prism' Fill RadialInterchange
+_radialFocus = prism constructor focus
   where
     focus = case _ of
       RadialGradient color1 color2 center ->
@@ -151,21 +174,21 @@ radialFocus = prism constructor focus
 
 
 
--- Even though made differently than `solidFocus`, `radialFocus` is
+-- Even though made differently than `_solidFocus`, `_radialFocus` is
 -- used the same way:
 
 l1 :: String
-l1 = preview radialFocus fillRadial # maybe "!" show
+l1 = preview _radialFocus fillRadial # maybe "!" show
 -- "{ color1: rgba 0 0 0 1.0, color2: rgba 255 255 255 1.0, percent: (3.3%) }"
 
 l2 :: Fill
-l2 = review radialFocus { color1 : Color.black
-                        , color2 : Color.white
-                        , center : Point 1.3 2.4
-                        }
+l2 = review _radialFocus { color1 : Color.black
+                         , color2 : Color.white
+                         , center : Point 1.3 2.4
+                         }
 
 
-hslaFocus = prism' constructor focus
+_hslaFocus = prism' constructor focus
   where
     focus = case _ of
       Solid color -> Just $ Color.toHSLA color
@@ -178,34 +201,34 @@ hslaFocus = prism' constructor focus
 
 
 
-deepSolidFocus :: forall ignore. 
+_deepSolidFocus :: forall ignore. 
                   Prism' (Either ignore Fill) Color
-deepSolidFocus = _Right <<< solidFocus
+_deepSolidFocus = _Right <<< _solidFocus
 
 -- tupleSolidFocus :: forall ignore.
 --                    APrism' (Tuple Fill ignore) Color
-tupleSolidFocus = _1 <<< solidFocus
+_tupleSolidFocus = _1 <<< _solidFocus
 
-eitherTupleFocus = _Left <<< _1
+_eitherTupleFocus = _Left <<< _1
 
 
                 {------ Constructing more specific prisms ------}
 
 -- `only` is used to check for a specific value:
 
-whiteToBlackFocus :: Prism' Fill Unit
-whiteToBlackFocus = only fillWhiteToBlack
+_whiteToBlackFocus :: Prism' Fill Unit
+_whiteToBlackFocus = only fillWhiteToBlack
 
 o1 :: Boolean
-o1 = is whiteToBlackFocus fillWhiteToBlack :: Boolean
+o1 = is _whiteToBlackFocus fillWhiteToBlack :: Boolean
 -- true
 
 o2 :: Boolean
-o2 = is whiteToBlackFocus fillBlackToWhite :: Boolean
+o2 = is _whiteToBlackFocus fillBlackToWhite :: Boolean
 -- false
 
 o3 :: Boolean
-o3 = is whiteToBlackFocus fillRadial :: Boolean
+o3 = is _whiteToBlackFocus fillRadial :: Boolean
 -- false
 
 -- Note that `only` requires `Fill` to implement `Eq`.
@@ -222,8 +245,8 @@ o3 = is whiteToBlackFocus fillRadial :: Boolean
 -- In this example, we want to focus on solid colors that are "bright
 -- enough."
 
-brightSolidFocus :: Prism' Fill Unit
-brightSolidFocus = nearly (Solid referenceColor) predicate
+_brightSolidFocus :: Prism' Fill Unit
+_brightSolidFocus = nearly (Solid referenceColor) predicate
   where
     referenceColor = Color.graytone 0.8
     predicate = case _ of
@@ -236,28 +259,28 @@ brightSolidFocus = nearly (Solid referenceColor) predicate
 -- values from `preview`:
 
 n1 :: Maybe Unit
-n1 = preview brightSolidFocus (Solid Color.white)
+n1 = preview _brightSolidFocus (Solid Color.white)
 -- (Just unit)
 
 n2 :: Maybe Unit
-n2 = preview brightSolidFocus (Solid Color.black)
+n2 = preview _brightSolidFocus (Solid Color.black)
 -- Nothing
 
 n3 :: Maybe Unit
-n3 = preview brightSolidFocus NoFill
+n3 = preview _brightSolidFocus NoFill
 --  Nothing
 
 
 -- ... so you probably want to use `is` or `isn't`:
 
 n4 :: Boolean
-n4 = is brightSolidFocus (Solid Color.white) :: Boolean
+n4 = is _brightSolidFocus (Solid Color.white) :: Boolean
 -- true
 
 -- You can recover the reference value with `review`:
 
 n5 :: Fill
-n5 = review brightSolidFocus unit
+n5 = review _brightSolidFocus unit
 -- (Solid rgba 204 204 204 1.0)
 
 
