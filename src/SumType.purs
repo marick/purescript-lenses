@@ -12,7 +12,8 @@ import Data.Tuple
 -}
 
 import Prelude
-import Data.Lens
+import Data.Lens (Prism', Traversal, Traversal', _1, _Left, _Right, is,
+                  isn't, nearly, only, preview, prism, prism', review, traversed)
 
 import Color (Color)
 import Color as Color
@@ -22,7 +23,7 @@ import Data.Generic.Rep.Eq as GEq
 import Data.Generic.Rep.Show as GShow
 import Data.Maybe (Maybe(..), maybe)
 import Data.Either (Either(..))
-import Data.Tuple
+import Data.Tuple (Tuple)
 import Data.Traversable (class Traversable)
 
 
@@ -56,10 +57,10 @@ fillRadial = RadialGradient Color.white Color.black $ Point 1.0 3.4
 -- desired case to a `Just <wrapped values>` or `Nothing`.
 
 _solidFill :: Prism' Fill Color
-_solidFill = prism' constructor focus
+_solidFill = prism' constructor focuser
   where
     constructor = Solid
-    focus fill = case fill of
+    focuser fill = case fill of
       Solid color -> Just color
       otherCases -> Nothing
 
@@ -138,9 +139,9 @@ n5 = review _solidWhite' unit
 -- This would violate the lens laws:
 
 _centerPoint :: Prism' Fill Point
-_centerPoint = prism' constructor focus
+_centerPoint = prism' constructor focuser
   where
-    focus = case _ of
+    focuser = case _ of
       RadialGradient _ _ point -> Just point
       _ -> Nothing
     
@@ -156,9 +157,9 @@ type RadialInterchange =
   }
 
 _centerPoint' :: Prism' Fill RadialInterchange
-_centerPoint' = prism constructor focus
+_centerPoint' = prism constructor focuser
   where
-    focus = case _ of
+    focuser = case _ of
       RadialGradient color1 color2 center ->
         Right {color1, color2, center}
       otherCases ->
@@ -208,14 +209,21 @@ _1_solidFill :: forall _1_ .
 _1_solidFill = _1 <<< _solidFill
 
 
+_left_1 ::forall a b _1_ _2_.
+           Traversal (Either (Tuple a _1_) _2_)
+                     (Either (Tuple b _1_) _2_)
+                     a b 
+_left_1 = _Left <<< _1
+
 
 
 
  {---- Not used in chapter, but an interesting use of records. ----}
 
-_hslaSolid = prism' constructor focus
+_hslaSolid :: Prism' Fill { h :: Number, s :: Number, l :: Number, a :: Number }
+_hslaSolid = prism' constructor focuser
   where
-    focus = case _ of
+    focuser = case _ of
       Solid color -> Just $ Color.toHSLA color
       _ -> Nothing
 
