@@ -11,7 +11,7 @@ import Data.Either
 
 {-  Commented out to keep the compiler from whining 
 import Prelude
-import Data.Lens
+import Data.Lens (Prism', prism')
 
 import Data.Maybe (Maybe(..))
 import Data.Int (fromString)
