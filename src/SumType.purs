@@ -9,11 +9,15 @@ import Color as Color
 import Data.Maybe
 import Data.Either
 import Data.Tuple
+import Data.Lens.At
+import Data.Lens.Index
 -}
 
 import Prelude
-import Data.Lens (Prism', Traversal, Traversal', _1, _Left, _Right, is,
+import Data.Lens (Prism', Traversal, Traversal', _1, _Left, _Right, _Just, is,
                   isn't, nearly, only, preview, prism, prism', review, traversed)
+import Data.Lens.At (class At, at)
+import Data.Lens.Index (class Index, ix)
 
 import Color (Color)
 import Color as Color
@@ -70,6 +74,7 @@ _solidFill' :: Prism' Fill Color
 _solidFill' = prism' Solid case _ of
   Solid color -> Just color
   _ -> Nothing
+
 
 
                 {------ Basic usage: `preview`, `review`, `is`, and `isn't` ------}
@@ -216,9 +221,24 @@ _left_1 ::forall a b _1_ _2_.
 _left_1 = _Left <<< _1
 
 
+_left_ix1 :: forall _1_ indexed a.
+             Index indexed Int a => 
+             Traversal' (Either indexed _1_) a 
+_left_ix1 = _Left <<< ix 1
 
 
- {---- Not used in chapter, but an interesting use of records. ----}
+_ix1_left :: forall _1_ indexed a.
+             Index indexed Int (Either a _1_) =>
+             Traversal' indexed a
+_ix1_left = ix 1 <<< _Left
+
+_at1_just :: forall keyed a .
+             At keyed Int a =>
+             Traversal' keyed a
+_at1_just = at 1 <<< _Just
+
+
+      {---- Not used in chapter, but an interesting use of records. ----}
 
 _hslaSolid :: Prism' Fill { h :: Number, s :: Number, l :: Number, a :: Number }
 _hslaSolid = prism' constructor focuser
