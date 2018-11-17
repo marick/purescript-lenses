@@ -114,7 +114,7 @@ _trav_at3 = traversed <<< at 3
 
 
 _at3_trav_1' :: forall a _1_ keyed .
-                At keyed Int a => 
-                  Traversal' (Map Int (Tuple a _1_)) a
+                At keyed Int (Tuple a _1_) => 
+                  Traversal' keyed a
 _at3_trav_1' = at 3 <<< traversed <<< _1
 

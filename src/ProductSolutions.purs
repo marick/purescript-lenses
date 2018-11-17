@@ -53,7 +53,11 @@ solution4 =
   in 
     set _2 new both
 
+-- Michiel Borkent points out that you don't actually need to use
+-- composition. These also work:
 
+-- over _2 (view _object) both 
+-- over _2 _.object both
 
         {- The Second Composition Exercise -}
 
