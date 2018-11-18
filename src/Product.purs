@@ -7,6 +7,8 @@ import Data.Lens (lens, view, set, over, _1, _2)
 
 import Data.Tuple
 import Data.String as String
+import Data.Array as Array
+import Data.Map as Map
 -}
 
 import Prelude
