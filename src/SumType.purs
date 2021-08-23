@@ -23,8 +23,8 @@ import Color (Color)
 import Color as Color
 
 import Data.Generic.Rep (class Generic)
-import Data.Generic.Rep.Eq as GEq
-import Data.Generic.Rep.Show as GShow
+import Data.Eq.Generic as GEq
+import Data.Show.Generic as GShow
 import Data.Maybe (Maybe(..), maybe)
 import Data.Either (Either(..))
 import Data.Tuple (Tuple)
