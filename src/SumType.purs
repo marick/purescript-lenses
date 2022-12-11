@@ -65,7 +65,7 @@ _solidFill = prism' constructor focuser
     constructor = Solid
     focuser fill = case fill of
       Solid color -> Just color
-      _ -> Nothing
+      otherCases -> Nothing
 
 -- In real life, you might abbreviate the above to this:
 
