@@ -23,10 +23,9 @@ import Color (Color)
 import Color as Color
 
 import Data.Generic.Rep (class Generic)
-import Data.Generic.Rep.Eq as GEq
-import Data.Generic.Rep.Show as GShow
 import Data.Maybe (Maybe(..), maybe)
 import Data.Either (Either(..))
+import Data.Show.Generic (genericShow)
 import Data.Tuple (Tuple)
 import Data.Traversable (class Traversable)
 
@@ -66,7 +65,7 @@ _solidFill = prism' constructor focuser
     constructor = Solid
     focuser fill = case fill of
       Solid color -> Just color
-      otherCases -> Nothing
+      _ -> Nothing
 
 -- In real life, you might abbreviate the above to this:
 
@@ -256,21 +255,18 @@ _hslaSolid = prism' constructor focuser
 -- ... although Eq is only required for `only`.
 
 derive instance genericPercent :: Generic Percent _
-instance eqPercent :: Eq Percent where
-  eq = GEq.genericEq
+derive instance eqPercent :: Eq Percent
 instance showPercent :: Show Percent where
   show (Percent f) = "(" <> show f <> "%)"
 
 derive instance genericPoint :: Generic Point _
-instance eqPoint :: Eq Point where
-  eq = GEq.genericEq
+derive instance eqPoint :: Eq Point
 instance showPoint :: Show Point where
   show (Point x y) = "(" <> show x <> ", " <> show y <> ")"
 
 derive instance genericFill :: Generic Fill _
-instance eqFill :: Eq Fill where
-  eq = GEq.genericEq
+derive instance eqFill :: Eq Fill
 instance showFill :: Show Fill where
-  show x = GShow.genericShow x
+  show x = genericShow x
 
 
